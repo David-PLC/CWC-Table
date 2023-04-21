@@ -1,0 +1,289 @@
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Table</title>
+    <link rel="icon" href="icon.png" />
+
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <link href="lib/bootstrap.min.css" rel="stylesheet">
+    <script src="lib/jquery.dataTables.min.js"></script>
+    <script src="lib/dataTables.dataTables.min.js"></script>
+    <script src="lib/dataTables.bootstrap4.min.js"></script>
+    <link href="lib/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="lib/select.dataTables.min.js"></script>
+    <script src="lib/dataTables.select.min.js"></script>
+    <link href="lib/select.dataTables.min.css" rel="stylesheet">
+
+    <script src="webcc.min.js"></script>
+    <script src="unified.interface.js"></script>
+    <link href="lib/style.css" rel="stylesheet">
+
+    <!-- INIT -->
+    <script>
+        var production = true;
+
+        function init(result) {
+            if (result) {
+                unifiedInterfaceInit();
+                tableInit(WebCC.Properties);
+            } else {
+                console.log('Table: Init without result.');
+            }
+        }
+
+        window.onload = function () {
+            ////////////////////////////////////////////////////////////////////////////////
+            // DEMO
+            if (!production) {
+                WebCC.Properties = {
+                    select: true,
+                    searching: false,
+                    columns: ["Parameter", "Read", "Value"],
+                    columnsEdit: [false, false, true],
+                    columnsShow: [true, true, true],
+                    rows: [
+                        ["param01", "read1", "value1"],
+                        ["param02", "read2", "value2"],
+                        ["param03", "read3", "value3"]
+                    ],
+                    pageLength: 3
+                };
+                init(true);
+            }
+            ////////////////////////////////////////////////////////////////////////////////
+            // PRODUCTION
+            if (production) {
+                WebCC.start(init, UnifiedInterface.HostListener, _extensions, _timeout);
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div id="content">
+        <table id="tableSimple" class="display" style="width:100%">
+        </table>
+    </div>
+
+    <script>
+        function toRGBA(num) {
+            num >>>= 0;
+            var b = num & 0xFF,
+                g = (num & 0xFF00) >>> 8,
+                r = (num & 0xFF0000) >>> 16,
+                a = ((num & 0xFF000000) >>> 24) / 255;
+            return 'rgba(' + [r, g, b, a].join(',') + ')';
+        }
+    </script>
+
+    <script>
+        var $tbl = $('#tableSimple');
+        var $datatbl;
+        var propsColumns;
+        var propsColumnsEdit;
+        var propsRows;
+
+        // var $inputvals = {};
+
+        var tableInit = function (props) {
+
+            // load and parse columns
+            if (props.hasOwnProperty('columns') && props.columns != null) {
+                if (typeof props.columns === 'string') {
+                    propsColumns = JSON.parse(props.columns);
+                } else if (Array.isArray(props.columns)) {
+                    propsColumns = props.columns;
+                } else {
+                    console.log('Table: WRONG FORMAT: columns');
+                }
+            } else {
+                return;
+            }
+            // load and parse columns editable
+            if (props.hasOwnProperty('columnsEdit') && props.columnsEdit != null) {
+                if (typeof props.columnsEdit === 'string') {
+                    propsColumnsEdit = JSON.parse(props.columnsEdit);
+                } else if (Array.isArray(props.columnsEdit)) {
+                    propsColumnsEdit = props.columnsEdit;
+                } else {
+                    console.log('Table: WRONG FORMAT: columnsEdit');
+                }
+            } else {
+                return;
+            }
+            // load and parse rows
+            if (props.hasOwnProperty('rows') && props.rows != null) {
+                if (typeof props.rows === 'string') {
+                    propsRows = JSON.parse(props.rows);
+                } else if (Array.isArray(props.rows)) {
+                    propsRows = props.rows;
+                } else {
+                    console.log('Table: WRONG FORMAT: rows');
+                }
+            } else {
+                return;
+            }
+
+            // clear datatable
+            if ($datatbl != null) {
+                $datatbl.destroy();
+            }
+            // clear table
+            $tbl.empty();
+
+            // propsColumns = ["Parameter", "Read", "Value"]
+
+            // populate header
+            if (propsColumns.length > 0) {
+                let $thead = $('<thead>'); //$thead = <thead> </thead>
+                let $thr = $('<tr>'); //$tr = <tr> </tr>
+                $thead.append($thr); //$thead = <thead> <tr> </tr> </thead>
+                $tbl.append($thead); //$tbl = <table id="tableSimple"> <thead> <tr> </tr> </thead> </table>
+
+
+                for (let i = 0; i < propsColumns.length; i++) {
+                    let $th = $('<th>');  //$th = <th> </th>
+                    $th.html(propsColumns[i]); // $th = <th>Parameter</th> = propsColumns[0]
+                    $thr.append($th); //$thr = <tr> <th>Parameter</th> </tr>
+                }
+                // $thr = <tr> <th>Parameter</th> <th>Read</th> <th>Value</th> </tr>
+            }
+
+            // populate rows
+            if (propsRows.length > 0) {
+                let $tbody = $('<tbody>');
+                $tbl.append($tbody);
+                for (let i = 0; i < propsRows.length; i++) {
+                    let $tbr = $('<tr>');
+                    for (let j = 0; j < propsColumnsEdit.length; j++) {
+                        let $td = $('<td>');
+
+                        if (propsColumnsEdit[j]) {
+                            $input = $('<input type="text" id="input_' + i + '_' + j + '" class="inputval form-control form-control-sm" onchange="inputChange(this)">');
+                            $input.val(propsRows[i][j])
+                            $td.append($input);
+                        } else {
+                            $td.html(propsRows[i][j]);
+                        }
+
+                        $tbr.append($td);
+                    }
+                    $tbody.append($tbr);
+                }
+
+            }
+
+            // init data table structure
+            let DataTableConfig = {
+                retrieve: true,
+                paging: true,
+                lengthChange: false,
+                info: false,
+                pageLength: 10,
+                select: false,
+                searching: false
+            };
+
+            // load and parse columns show
+            if (props.hasOwnProperty('columnsShow') && props.columnsShow != null) {
+                let propsColumnsShow;
+                if (typeof props.columnsShow === 'string') {
+                    propsColumnsShow = JSON.parse(props.columnsShow);
+                } else if (Array.isArray(props.columnsShow)) {
+                    propsColumnsShow = props.columnsShow;
+                } else {
+                    console.log('Table: WRONG FORMAT: columnsShow');
+                }
+                if (propsColumnsShow.length > 0) {
+                    DataTableConfig.columns = [];
+                }
+                propsColumnsShow.forEach(col => {
+                    if (col) DataTableConfig.columns.push(null);
+                    else DataTableConfig.columns.push({ visible: false });
+                });
+            }
+
+            if (props.hasOwnProperty('pageLength') && props.pageLength) {
+                DataTableConfig.pageLength = props.pageLength;
+            }
+
+            if (props.hasOwnProperty('select') && props.select) {
+                DataTableConfig.select = props.select;
+                $('td').addClass('clickable');
+            }
+
+            if (props.hasOwnProperty('searching') && props.searching) {
+                DataTableConfig.searching = props.searching;
+            }
+
+            $datatbl = $tbl.DataTable(DataTableConfig)
+                .on('select', function (e, dt, type, indexes) {
+                    // console.log('select');
+                    if (type === 'row') {
+                        let data = $datatbl.rows(indexes).data()//.pluck('id');
+                        let id = data[0][0];
+                        let values = [];
+                        data[0].forEach(val => {
+                            if (val.startsWith('<input type="text"')) {
+                            }
+                            else {
+                                values.push(val);
+                            }
+                        });
+                        let args = {
+                            rowId: id,
+                            rowVals: values
+                        };
+                        fireEvent('ev_selectRow', args);
+                    }
+                })
+                .on('deselect', function (e, dt, type, indexes) {
+                    if (type === 'row') {
+                        let args = { rowId: null };
+                        fireEvent('ev_selectRow', args);
+                    }
+                });
+
+            setTimeout(function () {
+                if (DataTableConfig.searching) {
+                    $('#tableSimple_wrapper').children().eq(1).css({ height: 'calc(100% - 42px - 39px)' });
+                } else {
+                    $('#tableSimple_wrapper').children().eq(1).css({ height: 'calc(100% - 42px)' });
+                }
+            }, 50);
+            console.log('Table: Table initialized')
+        }
+        function inputChange(_this) {
+            let newRows = updateChangedInput($(_this).attr('id'), $(_this).val());
+            let updId = $(_this).attr('id').split('_')[1];
+            let args = { rows: newRows };
+            console.log('args', args);
+            fireEvent('ev_updateRows', newRows);
+            fireEvent('ev_updateRow', newRows[updId]);
+        }
+
+        // update rows values
+        function updateChangedInput(inputId, newValue) {
+            if (propsRows && propsRows.length > 0) {
+                let i = inputId.split('_')[1];
+                let j = inputId.split('_')[2];
+                propsRows[i][j] = newValue;
+            }
+            return propsRows;
+        }
+        // fire event to winCC
+        function fireEvent(ev, args) {
+            if (WebCC && WebCC.Events) {
+                WebCC.Events.fire(ev, JSON.stringify(args));
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

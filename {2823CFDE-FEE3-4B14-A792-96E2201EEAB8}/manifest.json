@@ -1,0 +1,83 @@
+{
+    "mver": "1.2.0",
+    "control": {
+        "identity": {
+            "name": "Table",
+            "version": "6",
+            "displayname": "Table",
+            "icon": "./control/icon.png",
+            "type": "guid://2823CFDE-FEE3-4B14-A792-96E2201EEAB8",
+            "start": "./control/index.html"
+        },
+        "environment": {
+            "extensions": {
+                "HMI": {
+                    "mandatory": true,
+                    "version": "1.0"
+                }
+            }
+        },
+        "contracts": {
+            "api": {
+                "methods": {},
+                "events": {
+                    "ev_selectRow": {
+                        "description": "Select row",
+                        "arguments": {
+                            "rowId": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "ev_updateRows": {
+                        "description": "Update rows values",
+                        "arguments": {
+                            "rows": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "ev_updateRow": {
+                        "description": "Update row value",
+                        "arguments": {
+                            "rows": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "properties": {
+                    "select": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "pageLength": {
+                        "type": "number",
+                        "default": 10
+                    },
+                    "columns": {
+                        "type": "string",
+                        "default": "['']"
+                    },
+                    "columnsEdit": {
+                        "type": "string",
+                        "default": "[]"
+                    },
+                    "columnsShow": {
+                        "type": "string",
+                        "default": "[]"
+                    },
+                    "rows": {
+                        "type": "string",
+                        "default": "[]"
+                    },
+                    "searching": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            }
+        },
+        "types": {}
+    }
+}
