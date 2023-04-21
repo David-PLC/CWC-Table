@@ -32,7 +32,7 @@ HTML table
       columnsShow: [true, true, true]
   ```
 
-  - **pageLength** : Number of rows to be shown in one tab (i.e. 18).
+  - **pageLength** : Number of rows to be shown in one tab (i.e. 18)
 
   - **rows** : Array of element to fill the table rows
 
