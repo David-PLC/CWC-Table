@@ -64,7 +64,7 @@ HTML table
       [["param01", "read1", "value1"], ["param02", "read2", "value2"], ["param03", "read3", "value3"]]
   ```
 
-    - **ev_updateRow** : This event is triggerd every time an user update a row value by the text input area, as a result in the "rows" object is returned the updated content of the all the updated row
+  - **ev_updateRow** : This event is triggerd every time an user update a row value by the text input area, as a result in the "rows" object is returned the updated content of the all the updated row
 
   ```json
       // Example
