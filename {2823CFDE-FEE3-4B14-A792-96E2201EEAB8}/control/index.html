@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Table</title>
+    <title>Comi-Table</title>
     <link rel="icon" href="icon.png" />
 
     <script src="lib/jquery.min.js"></script>
@@ -30,7 +30,7 @@
                 unifiedInterfaceInit();
                 tableInit(WebCC.Properties);
             } else {
-                console.log('Table: Init without result.');
+                console.log('Comi-Table: Init without result.');
             }
         }
 
@@ -40,16 +40,58 @@
             if (!production) {
                 WebCC.Properties = {
                     select: true,
+                    pageLength: 22,
                     searching: false,
+
+                    // columns: ["ID","Name","Read","Value"],
+                    // columnsEdit: [false,false,false,false],
+                    // columnsShow: [false,true,true,true],
+                    // rows: [
+                    //     ["ID1","param1","read1","value1"],
+                    //     ["ID2","param2","read2","value2"],
+                    //     ["ID3","param3","read3","value3"]
+                    // ]
+
                     columns: ["Parameter", "Read", "Value"],
                     columnsEdit: [false, false, true],
-                    columnsShow: [true, true, true],
+                    columnsShow: [],
                     rows: [
                         ["param01", "read1", "value1"],
                         ["param02", "read2", "value2"],
-                        ["param03", "read3", "value3"]
+                        ["param03", "read3", "value3"],
+                        ["param04", "read1", "value1"],
+                        ["param05", "read2", "value2"],
+                        ["param06", "read3", "value3"],
+                        ["param07", "read1", "value1"],
+                        ["param08", "read2", "value2"],
+                        ["param09", "read3", "value3"],
+                        ["param10", "read1", "value1"],
+                        ["param11", "read2", "value2"],
+                        ["param12", "read3", "value3"],
+                        ["param13", "read1", "value1"],
+                        ["param14", "read2", "value2"],
+                        ["param15", "read3", "value3"],
+                        ["param16", "read1", "value1"],
+                        ["param17", "read2", "value2"],
+                        ["param18", "read3", "value3"],
+                        ["param19", "read1", "value1"],
+                        ["param20", "read2", "value2"],
+                        ["param21", "read3", "value3"],
+                        ["param22", "read1", "value1"],
+                        ["param23", "read2", "value2"],
+                        ["param24", "read3", "value3"]
                     ],
-                    pageLength: 3
+                    pageLength: 18
+
+
+                    // columns: ["Parameter"],
+                    // columnsEdit: [],
+                    // columnsShow: [],
+                    // rows: [
+                    //     ["param1"],
+                    //     ["param2"],
+                    //     ["param3"]
+                    // ]
                 };
                 init(true);
             }
@@ -66,6 +108,20 @@
 
     <div id="content">
         <table id="tableSimple" class="display" style="width:100%">
+            <!-- <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Read</th>
+                    <th>Value</th>
+                </tr>
+            </thead> -->
+            <!-- <tbody>
+                <tr>
+                    <td>Param</td>
+                    <td>123</td>
+                    <td>456</td>
+                </tr>
+            </tbody> -->
         </table>
     </div>
 
@@ -98,7 +154,7 @@
                 } else if (Array.isArray(props.columns)) {
                     propsColumns = props.columns;
                 } else {
-                    console.log('Table: WRONG FORMAT: columns');
+                    console.log('Comi-Table: WRONG FORMAT: columns');
                 }
             } else {
                 return;
@@ -110,7 +166,7 @@
                 } else if (Array.isArray(props.columnsEdit)) {
                     propsColumnsEdit = props.columnsEdit;
                 } else {
-                    console.log('Table: WRONG FORMAT: columnsEdit');
+                    console.log('Comi-Table: WRONG FORMAT: columnsEdit');
                 }
             } else {
                 return;
@@ -122,7 +178,7 @@
                 } else if (Array.isArray(props.rows)) {
                     propsRows = props.rows;
                 } else {
-                    console.log('Table: WRONG FORMAT: rows');
+                    console.log('Comi-Table: WRONG FORMAT: rows');
                 }
             } else {
                 return;
@@ -196,7 +252,7 @@
                 } else if (Array.isArray(props.columnsShow)) {
                     propsColumnsShow = props.columnsShow;
                 } else {
-                    console.log('Table: WRONG FORMAT: columnsShow');
+                    console.log('Comi-Table: WRONG FORMAT: columnsShow');
                 }
                 if (propsColumnsShow.length > 0) {
                     DataTableConfig.columns = [];
@@ -229,6 +285,7 @@
                         let values = [];
                         data[0].forEach(val => {
                             if (val.startsWith('<input type="text"')) {
+                                // TODO
                             }
                             else {
                                 values.push(val);
@@ -238,12 +295,14 @@
                             rowId: id,
                             rowVals: values
                         };
+                         // console.log('args', args);
                         fireEvent('ev_selectRow', args);
                     }
                 })
                 .on('deselect', function (e, dt, type, indexes) {
                     if (type === 'row') {
                         let args = { rowId: null };
+                        // console.log('args', args);
                         fireEvent('ev_selectRow', args);
                     }
                 });
@@ -254,27 +313,32 @@
                 } else {
                     $('#tableSimple_wrapper').children().eq(1).css({ height: 'calc(100% - 42px)' });
                 }
+
+                // $inputvals = document.querySelector('.inputval');
             }, 50);
-            console.log('Table: Table initialized')
+
+            console.log('Comi-Table: Table initialized')
         }
+
         function inputChange(_this) {
             let newRows = updateChangedInput($(_this).attr('id'), $(_this).val());
             let updId = $(_this).attr('id').split('_')[1];
-            let args = { rows: newRows };
-            console.log('args', args);
+            let args = {rows: newRows};
+            console.log('args',  args);
             fireEvent('ev_updateRows', newRows);
             fireEvent('ev_updateRow', newRows[updId]);
         }
 
         // update rows values
         function updateChangedInput(inputId, newValue) {
-            if (propsRows && propsRows.length > 0) {
+            if (propsRows && propsRows.length > 0) { 
                 let i = inputId.split('_')[1];
                 let j = inputId.split('_')[2];
                 propsRows[i][j] = newValue;
             }
             return propsRows;
         }
+
         // fire event to winCC
         function fireEvent(ev, args) {
             if (WebCC && WebCC.Events) {
@@ -283,6 +347,18 @@
         }
 
     </script>
+
+    <!-- <button onclick="update1()">update</button>
+    <script>
+        var update1 = function () {
+            // UnifiedInterface.Local.setProps({ key: 'select', value: false });
+            // UnifiedInterface.Local.setProps({ key: 'columns', value: ["ID","Name"] });
+            // UnifiedInterface.Local.setProps({ key: 'columnsEdit', value: [false,false] });
+            // UnifiedInterface.Local.setProps({ key: 'columnsShow', value: [false,true] });
+            // UnifiedInterface.Local.setProps({ key: 'rows', value: [["ID1","NAME 1"],["ID2","NAME 2"],["ID3","NAME 3"],["ID2","NAME 4"],["ID3","NAME 5"]] });
+            UnifiedInterface.Local.setProps({ key: 'rows', value: [["ID1","NAME 1","NAME 1"],["ID2","NAME 2","NAME 2"],["ID3","NAME 3","NAME 3"],["ID2","NAME 4","NAME 4"],["ID3","NAME 5","NAME 5"]] });
+        }
+    </script>  -->
 
 </body>
 

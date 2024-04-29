@@ -16,7 +16,12 @@ const _contract = {
         'rows': '[]',
         'searching': false
     },
-    types: {}
+    types: {
+        "thColor": null,
+        "tdColor": null,
+        "selTdColor": null,
+        "selTrColor": null
+    }
 };
 
 var UnifiedInterface = function () {
@@ -25,7 +30,13 @@ var UnifiedInterface = function () {
     };
 
     var _setProps = function (data) {
-        console.log('Table: Key <', data.key, '>');
+        console.log('Comi-Table: Key <', data.key, '>');
+        // if (WebCC.Properties.hasOwnProperty(data.key)) {
+        //     WebCC.Properties[data.key] = data.value;
+        // } else {
+        //     console.log('Comi-Table: Unrecognized key <', data.key, '>');
+        // }
+        // refresh table
         tableInit(WebCC.Properties);
     };
 

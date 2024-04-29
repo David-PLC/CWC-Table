@@ -38,7 +38,7 @@
                         }
                     },
                     "ev_updateRow": {
-                        "description": "Update row value",
+                        "description": "Update row values",
                         "arguments": {
                             "rows": {
                                 "type": "string"
@@ -78,6 +78,23 @@
                 }
             }
         },
-        "types": {}
+        "types": {
+            "thColor": {
+                "$id": "http://tia.siemens.com/wincc-unified/types/s/color",
+                "type": "number"
+            },
+            "tdColor": {
+                "$id": "http://tia.siemens.com/wincc-unified/types/s/color",
+                "type": "number"
+            },
+            "selTdColor": {
+                "$id": "http://tia.siemens.com/wincc-unified/types/s/color",
+                "type": "number"
+            },
+            "selTrColor": {
+                "$id": "http://tia.siemens.com/wincc-unified/types/s/color",
+                "type": "number"
+            }
+        }
     }
 }
