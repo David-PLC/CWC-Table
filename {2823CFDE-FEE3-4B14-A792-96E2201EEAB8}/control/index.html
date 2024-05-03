@@ -23,7 +23,7 @@
 
     <!-- INIT -->
     <script>
-        var production = true;
+        var production = false;
 
         function init(result) {
             if (result) {
@@ -44,16 +44,6 @@
                     select: true,
                     pageLength: 22,
                     searching: false,
-
-                    // columns: ["ID","Name","Read","Value"],
-                    // columnsEdit: [false,false,false,false],
-                    // columnsShow: [false,true,true,true],
-                    // rows: [
-                    //     ["ID1","param1","read1","value1"],
-                    //     ["ID2","param2","read2","value2"],
-                    //     ["ID3","param3","read3","value3"]
-                    // ]
-
                     columns: ["Parameter", "Read", "Value"],
                     columnsEdit: [false, false, true],
                     columnsShow: [],
@@ -84,16 +74,6 @@
                         ["param24", "read3", "value3"]
                     ],
                     pageLength: 18
-
-
-                    // columns: ["Parameter"],
-                    // columnsEdit: [],
-                    // columnsShow: [],
-                    // rows: [
-                    //     ["param1"],
-                    //     ["param2"],
-                    //     ["param3"]
-                    // ]
                 };
                 init(true);
             }
