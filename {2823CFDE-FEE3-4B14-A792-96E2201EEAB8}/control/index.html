@@ -28,7 +28,9 @@
         function init(result) {
             if (result) {
                 unifiedInterfaceInit();
-                tableInit(WebCC.Properties);
+                if (!production) {
+                    tableInit(WebCC.Properties);
+                }
             } else {
                 console.log('Comi-Table: Init without result.');
             }
@@ -108,20 +110,6 @@
 
     <div id="content">
         <table id="tableSimple" class="display" style="width:100%">
-            <!-- <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Read</th>
-                    <th>Value</th>
-                </tr>
-            </thead> -->
-            <!-- <tbody>
-                <tr>
-                    <td>Param</td>
-                    <td>123</td>
-                    <td>456</td>
-                </tr>
-            </tbody> -->
         </table>
     </div>
 
@@ -295,7 +283,7 @@
                             rowId: id,
                             rowVals: values
                         };
-                         // console.log('args', args);
+                        // console.log('args', args);
                         fireEvent('ev_selectRow', args);
                     }
                 })
@@ -323,15 +311,15 @@
         function inputChange(_this) {
             let newRows = updateChangedInput($(_this).attr('id'), $(_this).val());
             let updId = $(_this).attr('id').split('_')[1];
-            let args = {rows: newRows};
-            console.log('args',  args);
+            let args = { rows: newRows };
+            console.log('args', args);
             fireEvent('ev_updateRows', newRows);
             fireEvent('ev_updateRow', newRows[updId]);
         }
 
         // update rows values
         function updateChangedInput(inputId, newValue) {
-            if (propsRows && propsRows.length > 0) { 
+            if (propsRows && propsRows.length > 0) {
                 let i = inputId.split('_')[1];
                 let j = inputId.split('_')[2];
                 propsRows[i][j] = newValue;
@@ -347,19 +335,6 @@
         }
 
     </script>
-
-    <!-- <button onclick="update1()">update</button>
-    <script>
-        var update1 = function () {
-            // UnifiedInterface.Local.setProps({ key: 'select', value: false });
-            // UnifiedInterface.Local.setProps({ key: 'columns', value: ["ID","Name"] });
-            // UnifiedInterface.Local.setProps({ key: 'columnsEdit', value: [false,false] });
-            // UnifiedInterface.Local.setProps({ key: 'columnsShow', value: [false,true] });
-            // UnifiedInterface.Local.setProps({ key: 'rows', value: [["ID1","NAME 1"],["ID2","NAME 2"],["ID3","NAME 3"],["ID2","NAME 4"],["ID3","NAME 5"]] });
-            UnifiedInterface.Local.setProps({ key: 'rows', value: [["ID1","NAME 1","NAME 1"],["ID2","NAME 2","NAME 2"],["ID3","NAME 3","NAME 3"],["ID2","NAME 4","NAME 4"],["ID3","NAME 5","NAME 5"]] });
-        }
-    </script>  -->
-
 </body>
 
 </html>

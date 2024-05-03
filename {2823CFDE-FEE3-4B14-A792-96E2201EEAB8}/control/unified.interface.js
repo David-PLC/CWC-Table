@@ -31,13 +31,11 @@ var UnifiedInterface = function () {
 
     var _setProps = function (data) {
         console.log('Comi-Table: Key <', data.key, '>');
-        // if (WebCC.Properties.hasOwnProperty(data.key)) {
-        //     WebCC.Properties[data.key] = data.value;
-        // } else {
-        //     console.log('Comi-Table: Unrecognized key <', data.key, '>');
-        // }
-        // refresh table
-        tableInit(WebCC.Properties);
+        if (data.key === 'rows') {
+            if (WebCC.Properties['rows'] != '[]' && WebCC.Properties['rows']!= null  && WebCC.Properties['rows']!= '') {
+                tableInit(WebCC.Properties);
+            }
+        }
     };
 
     return {
